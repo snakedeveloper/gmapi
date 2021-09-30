@@ -32,15 +32,16 @@ Before you'll begin to work with the library you must include gmapi.h header to 
 ```
 #define GMAPI_NO_D3D
 #include <gmapi.h>
-
+```
 Now you must add to the library dependencies proper static library - all depends on which runtime library you choose in your project:
 
-gmapi-mt.lib - Multithreaded
-gmapi-mt-dll.lib - Multithreaded DLL
-gmapi-mt-d.lib - Multithreaded debug
-gmapi-mt-d-dll.lib - Multithreaded debug DLL
-Next, you must create main library object, that is CGMAPI class. That class is a singleton, so only one instance can be created at runtime in your library. To create an instance of this class use CGMAPI::Create static method, which takes as parameter a pointer to "unsigned long" variable type - it'll be used to return the result of initialization (possible values are: GMAPI_INITIALIZATION_SUCCESS - if initialization succeeded; GMAPI_INITIALIZATION_FAILED - when initialization fails; GMAPI_ALREADY_INITIALIZED - when an instance of CGMAPI class already exists). The method returns pointer to newly created class object, which you should store in a variable. I recommend to do this in DLL's entrypoint, that is DllMain function, for example:
+- gmapi-mt.lib - Multithreaded
+- gmapi-mt-dll.lib - Multithreaded DLL
+- gmapi-mt-d.lib - Multithreaded debug
+- gmapi-mt-d-dll.lib - Multithreaded debug DLL
 
+Next, you must create main library object, that is CGMAPI class. That class is a singleton, so only one instance can be created at runtime in your library. To create an instance of this class use CGMAPI::Create static method, which takes as parameter a pointer to "unsigned long" variable type - it'll be used to return the result of initialization (possible values are: GMAPI_INITIALIZATION_SUCCESS - if initialization succeeded; GMAPI_INITIALIZATION_FAILED - when initialization fails; GMAPI_ALREADY_INITIALIZED - when an instance of CGMAPI class already exists). The method returns pointer to newly created class object, which you should store in a variable. I recommend to do this in DLL's entrypoint, that is DllMain function, for example:
+```
 gm::CGMAPI* gmapi;
 
 BOOL WINAPI DllMain( HINSTANCE aModuleHandle, int aReason, int aReserved ) {
