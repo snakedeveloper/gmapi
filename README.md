@@ -29,7 +29,7 @@ All you have to do is extract the archive to chosen directory and specify the pa
 
 Before you'll begin to work with the library you must include gmapi.h header to one of the source files in your project. If you don't have DirectX SDK installed define GMAPI_NO_D3D before including gmapi.h (D3D interfaces will be defined as void), thus this will look like:
 
-```
+```c++
 #define GMAPI_NO_D3D
 #include <gmapi.h>
 ```
@@ -41,7 +41,7 @@ Now you must add to the library dependencies proper static library - all depends
 - gmapi-mt-d-dll.lib - Multithreaded debug DLL
 
 Next, you must create main library object, that is CGMAPI class. That class is a singleton, so only one instance can be created at runtime in your library. To create an instance of this class use CGMAPI::Create static method, which takes as parameter a pointer to "unsigned long" variable type - it'll be used to return the result of initialization (possible values are: GMAPI_INITIALIZATION_SUCCESS - if initialization succeeded; GMAPI_INITIALIZATION_FAILED - when initialization fails; GMAPI_ALREADY_INITIALIZED - when an instance of CGMAPI class already exists). The method returns pointer to newly created class object, which you should store in a variable. I recommend to do this in DLL's entrypoint, that is DllMain function, for example:
-```
+```c++
 gm::CGMAPI* gmapi;
 
 BOOL WINAPI DllMain( HINSTANCE aModuleHandle, int aReason, int aReserved ) {
@@ -76,7 +76,7 @@ CGMAPI::Destroy() method frees the class instance from memory. BTW, all classes,
 
 When GMAPI is initialized you can now call GM functions from the DLL. All functions are nicely wrapped in the library so you can call them in a simple way, take a look:
 
-```
+```c++
 int list;
 gm::CGMVariable value;
 
@@ -98,7 +98,7 @@ All GM functions are available in GMAPI, excluding math functions and those that
 
 You can access them by a three ways: with GM functions of course (least efficent, less possibilities), by GM's structures that I've analyzed in runner and with "accessing classes" defined in GMAPI. Using structures is most efficent and equally unsafe, I'll explain how to use them in a documentation that I'll write later. Meanwhile, you can use the classes I mentioned - they're safer and easier to use than using the GM's structures. Why I called them "accessing" (wtf) ? Well, they're operating entirely on runner's memory, what is also reason why using them is somewhat entangled. In CGMAPI class there are some objects of these classes defined: Sprites (ISprites class), Backgrounds (IBackgrounds), Sounds (ISounds), Surfaces (ISurfaces) and Scripts (IScripts). All of these classes shares some methods that can retrieve various data that is relevant to respective GM resource type (for example, GetID() returns an ID of specified resource by given name of this type, GetCount() returns number of resources of this type) and all of them have an array operator ("[]") overloaded that returns reference type to next "accessing classes" - these classes gives you access to resource with ID specified in brackets. Damn, hard to explain... so, for example:
 
-```
+```c++
 gm::CGMAPI* gmapi;
 (...)
 // Let's say that we've added an animated sprite named spr_anim
